@@ -2,7 +2,7 @@
 * @Author: MarkJiYuan
 * @Date:   2019-09-23 19:17:46
 * @Last Modified by:   MarkJiYuan
-* @Last Modified time: 2019-09-26 01:31:21
+* @Last Modified time: 2019-10-14 22:01:33
 */
 
 #include <stdio.h>
@@ -10,35 +10,36 @@
 #include <sys/time.h>
 
 // typedef函数指针方便后面使用
-typedef double(*Pfun1)(int,double,double);
-double fibonacci_tail_recursion(int n, double last, double last2);
+typedef long double(*Pfun1)(int,long double,long double);
+long double fibonacci_tail_recursion(int n, long double last, long double last2);
 // 计时函数
-double timer_for_recursion(Pfun1 p, int n, double last, double last2);
+long double timer_for_recursion(Pfun1 p, int n, long double last, long double last2);
 
-typedef double(*Pfun2)(int);
-double fibonacci_interative(int n);
+typedef long double(*Pfun2)(int);
+long double fibonacci_interative(int n);
 // 计时函数
-double timer_for_interative(Pfun2 p, int n);
+long double timer_for_interative(Pfun2 p, int n);
 
 // 主函数入口
 int main()
 {
     int input;
+    printf("程序里有bug！第93项之前是正确的，从94项开始两个long double相加，结果大了1，导致后面的也都错了。\n");
     printf("获取斐波那契第n项：\n");
     scanf("%d", &input);
-    printf("尾递归结果：\t%.0lf\n\n", timer_for_recursion(fibonacci_tail_recursion, input, 1, 1));
-    printf("迭代结果：\t%.0lf\n", timer_for_interative(fibonacci_interative, input));
+    printf("尾递归结果：\t%.0Lf\n\n", timer_for_recursion(fibonacci_tail_recursion, input, 1, 1));
+    printf("迭代结果：\t%.0Lf\n", timer_for_interative(fibonacci_interative, input));
     
     return 0;
 }
 
 // 非尾递归的斐波那契我不太会写，最多只能跑到50多项，太慢了
-double fibonacci_tail_recursion(int n, double last, double last2)
+long double fibonacci_tail_recursion(int n, long double last, long double last2)
 {
     if (n == 3) return last + last2;
     if (n == 1 || n == 2) return 1;
 
-    double temp;
+    long double temp;
     // eg. (3,5) -> (5,8)
     temp = last2;
     last2 = last;
@@ -49,10 +50,10 @@ double fibonacci_tail_recursion(int n, double last, double last2)
 }
 
 // 循环版本的函数，也挺优雅的，逻辑也简单
-double fibonacci_interative(int n)
+long double fibonacci_interative(int n)
 {
     if (n == 1 || n == 2) return 1;
-    double last = 1, last2 = 1, temp;
+    long double last = 1, last2 = 1, temp;
     for (int i = 3; i < n + 1; ++i)
     {
         temp = last2;
@@ -63,9 +64,9 @@ double fibonacci_interative(int n)
 }
 
 // 想实现类似装饰器的效果，可以加在任意一个函数前面，但是不尽如人意，只能对一种函数实现一个计数器
-double timer_for_recursion(Pfun1 p, int n, double last, double last2)
+long double timer_for_recursion(Pfun1 p, int n, long double last, long double last2)
 {
-    double result;
+    long double result;
     struct timeval start, end;
     gettimeofday( &start, NULL );
     // 运行太快以致于微妙都不够用，因此将函数跑100000次计算总时长
@@ -93,9 +94,9 @@ double timer_for_recursion(Pfun1 p, int n, double last, double last2)
     return result;
 }
 
-double timer_for_interative(Pfun2 p, int n)
+long double timer_for_interative(Pfun2 p, int n)
 {
-    double result;
+    long double result;
     struct timeval start, end;
     gettimeofday( &start, NULL );
     for (int i = 0; i < 100000; ++i)
